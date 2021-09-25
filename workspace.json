@@ -8,7 +8,9 @@
       "targets": {
         "build": {
           "executor": "@nrwl/web:build",
-          "outputs": ["{options.outputPath}"],
+          "outputs": [
+            "{options.outputPath}"
+          ],
           "options": {
             "outputPath": "dist/apps/nxdominic",
             "index": "apps/nxdominic/src/index.html",
@@ -19,7 +21,9 @@
               "apps/nxdominic/src/favicon.ico",
               "apps/nxdominic/src/assets"
             ],
-            "styles": ["apps/nxdominic/src/styles.scss"],
+            "styles": [
+              "apps/nxdominic/src/styles.scss"
+            ],
             "scripts": [],
             "webpackConfig": "@nrwl/react/plugins/webpack"
           },
@@ -64,15 +68,52 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/nxdominic/**/*.{ts,tsx,js,jsx}"]
+            "lintFilePatterns": [
+              "apps/nxdominic/**/*.{ts,tsx,js,jsx}"
+            ]
           }
         },
         "test": {
           "executor": "@nrwl/jest:jest",
-          "outputs": ["coverage/apps/nxdominic"],
+          "outputs": [
+            "coverage/apps/nxdominic"
+          ],
           "options": {
             "jestConfig": "apps/nxdominic/jest.config.js",
             "passWithNoTests": true
+          }
+        },
+        "storybook": {
+          "executor": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/react",
+            "port": 4400,
+            "config": {
+              "configFolder": "apps/nxdominic/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "executor": "@nrwl/storybook:build",
+          "outputs": [
+            "{options.outputPath}"
+          ],
+          "options": {
+            "uiFramework": "@storybook/react",
+            "outputPath": "dist/storybook/nxdominic",
+            "config": {
+              "configFolder": "apps/nxdominic/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
           }
         }
       }
@@ -98,7 +139,117 @@
         "lint": {
           "executor": "@nrwl/linter:eslint",
           "options": {
-            "lintFilePatterns": ["apps/nxdominic-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "apps/nxdominic-e2e/**/*.{js,ts}"
+            ]
+          }
+        }
+      }
+    },
+    "shared": {
+      "projectType": "library",
+      "targets": {
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/shared/**/*.{ts,tsx,vue}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/libs/shared"
+          ],
+          "options": {
+            "jestConfig": "libs/shared/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "root": "libs/shared",
+      "sourceRoot": "libs/shared/src"
+    },
+    "vueapp": {
+      "projectType": "application",
+      "root": "apps/vueapp",
+      "sourceRoot": "apps/vueapp/src",
+      "targets": {
+        "build": {
+          "executor": "@nx-plus/vue:browser",
+          "options": {
+            "dest": "dist/apps/vueapp",
+            "index": "apps/vueapp/public/index.html",
+            "main": "apps/vueapp/src/main.ts",
+            "tsConfig": "apps/vueapp/tsconfig.app.json"
+          },
+          "configurations": {
+            "production": {
+              "mode": "production",
+              "filenameHashing": true,
+              "productionSourceMap": true,
+              "css": {
+                "extract": true,
+                "sourceMap": false
+              }
+            }
+          }
+        },
+        "serve": {
+          "executor": "@nx-plus/vue:dev-server",
+          "options": {
+            "browserTarget": "vueapp:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "vueapp:build:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/vueapp/**/*.{ts,tsx,vue}"
+            ]
+          }
+        },
+        "test": {
+          "executor": "@nrwl/jest:jest",
+          "outputs": [
+            "coverage/apps/vueapp"
+          ],
+          "options": {
+            "jestConfig": "apps/vueapp/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "vueapp-e2e": {
+      "root": "apps/vueapp-e2e",
+      "sourceRoot": "apps/vueapp-e2e/src",
+      "projectType": "application",
+      "targets": {
+        "e2e": {
+          "executor": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/vueapp-e2e/cypress.json",
+            "devServerTarget": "vueapp:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "vueapp:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "executor": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "apps/vueapp-e2e/**/*.{js,ts}"
+            ]
           }
         }
       }
